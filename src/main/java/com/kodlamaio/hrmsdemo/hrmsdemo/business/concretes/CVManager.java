@@ -1,20 +1,21 @@
 package com.kodlamaio.hrmsdemo.hrmsdemo.business.concretes;
 
 import com.kodlamaio.hrmsdemo.hrmsdemo.business.abstracts.*;
+import com.kodlamaio.hrmsdemo.hrmsdemo.core.utilities.adapters.cloudinary.CloudinaryService;
 import com.kodlamaio.hrmsdemo.hrmsdemo.core.utilities.results.Result;
 import com.kodlamaio.hrmsdemo.hrmsdemo.core.utilities.results.SuccessResult;
-import com.kodlamaio.hrmsdemo.hrmsdemo.dataAccess.abstracts.AbilityDao;
+
 import com.kodlamaio.hrmsdemo.hrmsdemo.dataAccess.abstracts.CVDao;
 import com.kodlamaio.hrmsdemo.hrmsdemo.entities.concretes.*;
-import com.kodlamaio.hrmsdemo.hrmsdemo.entities.dtos.AbilityAddDto;
+
 import com.kodlamaio.hrmsdemo.hrmsdemo.entities.dtos.CVAddDto;
-import com.kodlamaio.hrmsdemo.hrmsdemo.entities.dtos.SocialMediaAddDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -29,6 +30,7 @@ public class CVManager implements CVService {
     private final LanguageService languageService;
     private final EducationService educationService;
     private final SocialMediaService socialMediaService;
+    private final CloudinaryService cloudinaryService;
 
     @Override
     public Result add(CVAddDto cvAddDto) {
@@ -76,4 +78,19 @@ public class CVManager implements CVService {
 
         return new SuccessResult("Başarıyla eklendi");
     }
+
+
+    @Override
+    public Result saveImage(MultipartFile file, int id) {
+        @SuppressWarnings("unchecked")
+        Map<String, String> upload = (Map<String, String>) cloudinaryService.save(file).getData();
+        String imageUrl = upload.get("url");
+        CV cv= this.cvDao.getById(id);
+        cv.setImage(imageUrl);
+        cvDao.save(cv);
+        return new SuccessResult("Kayıt Başarılı");
+
+    }
+
+
 }

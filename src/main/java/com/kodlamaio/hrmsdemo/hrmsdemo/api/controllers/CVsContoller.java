@@ -4,10 +4,8 @@ import com.kodlamaio.hrmsdemo.hrmsdemo.business.abstracts.CVService;
 import com.kodlamaio.hrmsdemo.hrmsdemo.core.utilities.results.Result;
 import com.kodlamaio.hrmsdemo.hrmsdemo.entities.dtos.CVAddDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/cv")
@@ -19,5 +17,12 @@ public class CVsContoller {
     @PostMapping("/add")
     Result add(@RequestBody CVAddDto cvAddDto){
         return this.cvService.add(cvAddDto);
+    }
+
+
+    @PostMapping("/addImage")
+    public Result saveImage(@RequestBody MultipartFile file, @RequestParam int id) {
+        return this.cvService.saveImage(file, id);
+
     }
 }

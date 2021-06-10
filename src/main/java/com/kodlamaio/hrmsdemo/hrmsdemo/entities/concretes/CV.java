@@ -45,6 +45,9 @@ public class CV {
     @OneToOne(mappedBy = "cv")
     private SocialMedia socialMedia;
 
+    @Column(name="image")
+    private String image;
+
 
 
 }
